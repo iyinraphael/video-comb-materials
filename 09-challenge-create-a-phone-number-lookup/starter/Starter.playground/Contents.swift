@@ -8,7 +8,8 @@ example(of: "Create a phone number lookup") {
     "603-555-1234": "Florent",
     "408-555-4321": "Marin",
     "217-555-1212": "Scott",
-    "212-555-3434": "Shai"
+    "212-555-3434": "Shai",
+    "909-231-2127": "Liz"
   ]
 
   func convert(phoneNumber: String) -> Int? {
@@ -55,11 +56,71 @@ example(of: "Create a phone number lookup") {
 
     return "Dialing \(contact) (\(phoneNumber))..."
   }
+    
+    // Create a Phone number  lookup:
 
+    // - Receive a string of ten numbers or letters (be sure to handle nil case)
+    let arrayLetters =  PassthroughSubject<String, Never>()
+    
+    arrayLetters
+        .map(convert)
+        .replaceNil(with: 0)
+        .collect(10)
+        .map(format)
+        .map(dial)
+        .sink(receiveValue: {print($0)})
+        .store(in: &subscriptions)
+    // - Format the string
 
+    // - Dial that number
+    
+    "6035551234".forEach {
+        arrayLetters.send(String($0))
+    }
+    
+    "9092312127".forEach {
+        arrayLetters.send(String($0))
+    }
 
-  
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /// Copyright (c) 2020 Razeware LLC
 ///
